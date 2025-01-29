@@ -5,7 +5,7 @@ Proyek ini berjalan dengan **Docker Compose** untuk mengelola seluruh layanan.
 
 ---
 
-## 📌 1. Fitur
+## 📌 Fitur
 ✅ **Backend (Express.js)**
 - API CRUD untuk data karyawan (Create, Read, Update, Delete).
 - Menggunakan **MariaDB** sebagai database.
@@ -22,7 +22,7 @@ Proyek ini berjalan dengan **Docker Compose** untuk mengelola seluruh layanan.
 
 ---
 
-## 📌 2. Teknologi yang Digunakan
+## 📌 Teknologi yang Digunakan
 | Komponen  | Teknologi |
 |-----------|-----------|
 | Backend  | Node.js (Express.js), MariaDB |
@@ -30,11 +30,3 @@ Proyek ini berjalan dengan **Docker Compose** untuk mengelola seluruh layanan.
 | Database | MariaDB |
 | Tools    | Docker, Docker Compose |
 
----
-
-## 📌 3. Instalasi & Menjalankan Project
-
-### 🚀 1. Clone Repository
-```sh
-git clone https://github.com/frengkysorituamanurung/freng-api.git
-cd freng-api
