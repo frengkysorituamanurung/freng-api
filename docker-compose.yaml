@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  mariadb:
+    image: mariadb:10.3.39
+    container_name: freng-api
+    restart: always
+    env_file:
+      - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3307:3306"
+    networks:
+      - freng-api-network
+
+  backend:
+    build: ./backend
+    container_name: backend
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - mariadb
+    ports:
+      - "5000:5000"
+    networks:
+      - freng-api-network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "3001:80"
+    networks:
+      - freng-api-network
+
+networks:
+  freng-api-network:
+    driver: bridge
