@@ -31,10 +31,28 @@ class EmployeeService {
 
   static async deleteEmployee(id) {
     const conn = await pool.getConnection();
-    const result = await conn.query("DELETE FROM employees WHERE id = ?", [id]);
-    conn.release();
-    return result;
+    
+    try {
+      await conn.query("DELETE FROM employees WHERE id = ?", [id]);
+  
+      const rows = await conn.query("SELECT id FROM employees ORDER BY id ASC");
+  
+      let newId = 1;
+      for (let row of rows) {
+        await conn.query("UPDATE employees SET id = ? WHERE id = ?", [newId, row.id]);
+        newId++;
+      }
+      
+      await conn.query("ALTER TABLE employees AUTO_INCREMENT = ?", [newId]);
+  
+      conn.release();
+      return { message: "Karyawan berhasil dihapus dan ID telah diperbarui" };
+    } catch (error) {
+      conn.release();
+      throw error;
+    }
   }
+  
 }
 
 module.exports = EmployeeService;

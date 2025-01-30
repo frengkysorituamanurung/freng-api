@@ -18,16 +18,14 @@ const queries = [
         id INT PRIMARY KEY AUTO_INCREMENT,
         name VARCHAR(255) NOT NULL,
         position VARCHAR(255) NOT NULL,
-        salary DECIMAL(10,2) NOT NULL,
+        salary DECIMAL(10,0) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
     )`,
   `INSERT INTO company_db.employees (name, position, salary) VALUES 
-      ('John Doe', 'Software Engineer', 75000.00),
-      ('Jane Smith', 'Project Manager', 90000.00),
-      ('Alice Johnson', 'UI/UX Designer', 65000.00),
-      ('Bob Brown', 'Data Scientist', 85000.00),
-      ('Charlie Wilson', 'DevOps Engineer', 70000.00)`,
+      ('Frengky Soritua Manurung', 'DevOps Engineer', 7000000),
+      ('Siti Aminah', 'Backend Developer', 5500000),
+      ('Budi Santoso', 'Project Manager', 12000000)`,
 ];
 
 (async () => {
@@ -42,6 +40,9 @@ const queries = [
     }
 
     console.log("🎉 Migrasi berhasil dengan data dummy dimasukkan!");
+
+    // Panggil fungsi untuk mengambil data dengan format Rupiah
+    await getEmployees();
   } catch (error) {
     console.error("❌ Terjadi kesalahan saat migrasi:", error);
   } finally {
@@ -49,3 +50,26 @@ const queries = [
     await pool.end(); // Tutup pool setelah selesai
   }
 })();
+
+/**
+ * Fungsi untuk mengambil data dengan format Rupiah
+ */
+async function getEmployees() {
+  let connection;
+  try {
+    connection = await pool.getConnection();
+    const results = await connection.query(`
+      SELECT id, name, position, 
+             CONCAT('Rp ', REPLACE(FORMAT(salary, 0), ',', '.')) AS salary_rupiah, 
+             created_at, updated_at 
+      FROM company_db.employees
+    `);
+
+    console.log("📜 Data Karyawan:");
+    console.table(results);
+  } catch (error) {
+    console.error("❌ Terjadi kesalahan saat mengambil data karyawan:", error);
+  } finally {
+    if (connection) await connection.release();
+  }
+}
